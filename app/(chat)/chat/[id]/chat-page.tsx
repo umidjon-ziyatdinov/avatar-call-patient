@@ -59,7 +59,7 @@ export default function ChatPage({ avatarId }: { avatarId: string }) {
   return (
     <div className="flex h-full flex-col  w-full bg-background px-0">
       {/* Header */}
-      <Card className="rounded-none border-x-0 border-t-0 mx-0 px-0">
+      <div className="sticky top-0 z-50 bg-background">   <Card className="rounded-none border-x-0 border-t-0 mx-0 px-0">
         <div className="flex items-center justify-between py-4">
           <div className="flex items-center gap-4">
             <TooltipProvider>
@@ -121,8 +121,11 @@ export default function ChatPage({ avatarId }: { avatarId: string }) {
             </Sheet>
           </div>
         </div>
-      </Card>
-<PersonalizedChatInterface avatar={avatar} patientDetails={patient}/>
+      </Card> </div>
+    
+    <PersonalizedChatInterface avatar={avatar} patientDetails={patient}/>
+    
+
       {/* Chat Area */}
       <div className="flex-1 overflow-hidden">
         <Card className="h-full rounded-none border-x-0">
