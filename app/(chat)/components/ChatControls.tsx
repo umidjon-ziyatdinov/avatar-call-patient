@@ -32,7 +32,7 @@ const ChatControls = ({
                 disabled={isLoading}
                 variant="outline"
                 size="lg"
-                className="h-12 w-auto md:h-14 md:w-14 rounded-full border-2 hover:bg-primary/5 hover:text-primary dark:hover:bg-primary/20 transition-all duration-200 ease-in-out dark:border-gray-700 dark:hover:border-primary"
+                className="h-12 w-auto md:h-14 md:w-auto rounded-full border-2 hover:bg-primary/5 hover:text-primary dark:hover:bg-primary/20 transition-all duration-200 ease-in-out dark:border-gray-700 dark:hover:border-primary"
               >
                 {isLoading ? (
                   <Loader2 className="h-5 w-5 md:h-6 md:w-6 animate-spin" />
@@ -55,7 +55,7 @@ const ChatControls = ({
                 onClick={onVideoCall}
                 disabled={isLoading}
                 size="lg"
-                className="h-12 w-auto md:h-14 md:w-14 rounded-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 transition-all duration-200 ease-in-out text-primary-foreground shadow-md hover:shadow-lg"
+                className="h-12 w-auto md:h-14 md:w-auto rounded-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90 transition-all duration-200 ease-in-out text-primary-foreground shadow-md hover:shadow-lg"
               >
                 {isLoading ? (
                   <Loader2 className="h-5 w-5 md:h-6 md:w-6 animate-spin" />

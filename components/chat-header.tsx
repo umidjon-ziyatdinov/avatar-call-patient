@@ -50,7 +50,7 @@ function PureChatHeader({ isAdmin, userInitials, userDetails, signOutAction }: C
 
   if (pathname !== '/') return <></>;
   return (
-    <header className="sticky top-0 flex items-center  justify-between bg-background px-2 py-1.5 md:px-2 z-10">
+    <header className="sticky top-0 flex items-center min-h-[60px] border-b-1 border   justify-between bg-background px-2 py-1.5 md:px-2 z-10">
       <div className="flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -78,10 +78,10 @@ function PureChatHeader({ isAdmin, userInitials, userDetails, signOutAction }: C
             <Button 
               variant="ghost" 
               size="icon" 
-              className="relative size-9"
+              className="relative size-11"
               disabled={isPending}
             >
-              <Avatar className="size-8">
+              <Avatar className="size-10">
               {userDetails && <AvatarImage src={userDetails.profilePicture || '/images/default-profile.png'} alt={userDetails.name}/>}
                 <AvatarFallback className="bg-primary/10">
                   {userInitials}
