@@ -541,24 +541,49 @@ export async function getAllAvatarsForAdmin(userId: string,) {
   }
 }
 
-export async function getAvatarsByUser(userId: string, isActive: boolean = true) {
+export async function getAvatarsByUser(patientId: string, isActive: boolean = true) {
   try {
-    if (!userId) return;
+    if (!patientId) return;
 
-    const avatars = await db.select().from(avatar).where(
-      and(
-        or(eq(avatar.userId, userId), isNull(avatar.userId)),
-        eq(avatar.isActive, isActive)
-      )
-    );
+    const avatars = await db
+      .select({
+        id: avatar.id,
+        name: avatar.name,
+        role: avatar.role,
+        about: avatar.about,
+        age: avatar.age,
+        sex: avatar.sex,
+        education: avatar.education,
+        work: avatar.work,
+        promptAnswers: avatar.promptAnswers,
+        personality: avatar.personality,
+        isActive: avatar.isActive,
+        openaiVoice: avatar.openaiVoice,
+        openaiModel: avatar.openaiModel,
+        simliFaceId: avatar.simliFaceId,
+        simliCharacterId: avatar.simliCharacterId,
+        avatarImage: avatar.avatarImage,
+        initialPrompt: avatar.initialPrompt,
+        userId: avatar.userId
+      })
+      .from(avatar)
+      .leftJoin(patient, eq(patient.userId, avatar.userId))
+      .where(
+        and(
+          or(
+            eq(patient.userId, patient.userId), // Avatars created by the user
+            isNull(avatar.userId) // Public avatars
+          ),
+          eq(avatar.isActive, isActive)
+        )
+      );
 
     return avatars;
   } catch (error) {
-    console.error("Error getting all avatars:", error);
-    throw new Error("Failed to get all avatars");
+    console.error("Error getting avatars:", error);
+    throw new Error("Failed to get avatars");
   }
 }
-
 export type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateUserInput = Partial<Omit<User, 'createdAt'>> & { id: string };
 
