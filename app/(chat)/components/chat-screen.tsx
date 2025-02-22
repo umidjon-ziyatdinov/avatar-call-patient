@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, ChangeEvent } from "react";
 
 import { ArrowLeft, Play, Pause, Volume2 } from "lucide-react";
 
-import { Avatar, User } from "@/lib/db/schema";
+import { Avatar, Patient, User } from "@/lib/db/schema";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -118,7 +118,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ avatar, onBack }) => {
   const [isInCall, setIsInCall] = useState<boolean>(false);
 
 
-  const { data: patient, isLoading, mutate } = useSWR<User>(`/api/patient`, fetcher, {
+  const { data: patient, isLoading, mutate } = useSWR<Patient>(`/api/patient`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
@@ -157,7 +157,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ avatar, onBack }) => {
       
       <div className="flex flex-col w-full">
         <MobileVideoChat
-          patient={patient?.patientDetails ?? undefined}
+          patient={patient}
           avatar={avatar}
           
         />

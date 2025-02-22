@@ -16,7 +16,7 @@ import { useReactMediaRecorder } from 'react-media-recorder';
 import { RealtimeClient } from "@openai/realtime-api-beta";
 import { SimliClient } from "simli-client";
 import RingingAnimation from "@/components/RingingAnimation";
-import { Avatar, PatientDetails } from "@/lib/db/schema";
+import { Avatar, Patient, PatientDetails } from "@/lib/db/schema";
 import { generateFinalPrompt } from "@/utils/utils";
 import ChatControls from "./ChatControls";
 
@@ -58,7 +58,7 @@ const simliClient = new SimliClient();
 const MobileVideoChat: React.FC<{
   avatar: Avatar;
   className?: string
-  patient?: PatientDetails
+  patient?: Patient
   onBack?: () => void;
 }> = ({ avatar, onBack, className , patient}) => {
 

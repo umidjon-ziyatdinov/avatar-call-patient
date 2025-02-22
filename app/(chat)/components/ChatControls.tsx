@@ -22,7 +22,7 @@ const ChatControls = ({
   onCancel 
 }: ChatControlsProps) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full border-t dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-950/60 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 w-full border-red border-1 border-t dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-950/60 shadow-lg">
       <div className="container flex items-center justify-center gap-3 py-3 px-4 md:py-4 md:gap-4 max-w-2xl mx-auto">
         <TooltipProvider delayDuration={200}>
           <Tooltip>

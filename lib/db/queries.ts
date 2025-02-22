@@ -19,7 +19,9 @@ import {
   avatar, type Avatar,
   Call,
   call,
-  NewCall
+  NewCall,
+  patient,
+  Patient
 } from './schema';
 
 import { auth } from '@/app/(auth)/auth';
@@ -58,7 +60,14 @@ export async function getUser(email: string): Promise<Array<User>> {
 //     throw error;
 //   }
 // }
-
+export async function getPatient(email: string): Promise<Array<Patient>> {
+  try {
+    return await db.select().from(patient).where(eq(patient.email, email));
+  } catch (error) {
+    console.error('Failed to get user from database');
+    throw error;
+  }
+}
 export async function saveChat({
   id,
   userId,
@@ -578,6 +587,22 @@ export async function getUserById({ id }: { id: string }) {
       .select()
       .from(user)
       .where(eq(user.id, id))
+      .limit(1);
+
+    return foundUser || null;
+  } catch (error) {
+    console.error('Error getting user by id:', error);
+    throw new Error('Failed to get user');
+  }
+}
+
+export async function getPatientById({ id }: { id: string }) {
+  console.log('userId', id)
+  try {
+    const [foundUser] = await db
+      .select()
+      .from(patient)
+      .where(eq(patient.id, id))
       .limit(1);
 
     return foundUser || null;

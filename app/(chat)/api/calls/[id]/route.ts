@@ -26,7 +26,7 @@ interface AlertSummary {
 const CallAnalysisSchema = z.object({
     call_summary: z.string(),
     is_flagged: z.boolean(),
-    key_points: z.array(z.string()),
+    key_points: z.array(z.string()).optional(),
     overall_sentiment: z.object({
         rating: z.string(),
         description: z.string()
@@ -36,7 +36,7 @@ const CallAnalysisSchema = z.object({
         description: z.string().optional(),
         timestamp: z.string().optional(),
         recommended_followup: z.string().optional()
-    }).nullable(),
+    }).optional(),
     call_timeline: z.array(z.object({
         timestamp: z.string(),
         discussion_points: z.array(z.string())

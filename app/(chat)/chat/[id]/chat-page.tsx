@@ -122,12 +122,15 @@ export default function ChatPage({ avatarId }: { avatarId: string }) {
           </div>
         </div>
       </Card> </div>
-    
+ 
     <PersonalizedChatInterface avatar={avatar} patientDetails={patient}/>
+
+
+   
     
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden z-40">
         <Card className="h-full rounded-none border-x-0">
           <div className="flex h-full justify-center">
             <ChatScreen avatar={avatar} onBack={handleBack} />

@@ -88,7 +88,30 @@ export type NewUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 
 // Helper type for updating users
 export type UpdateUser = Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>;
-
+export const patient = pgTable('Patient', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  userId: uuid('userId').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  about: text('about').default(''),
+  age: varchar('age', { length: 3 }).default(''),
+  name: varchar('name', { length: 128 }).notNull().default('Unknown'),
+  sex: varchar('sex', { length: 10 }).default(''),
+  email: varchar('email', { length: 64 }).notNull().unique(),
+  password: varchar('password', { length: 64 }),
+  dateOfBirth: varchar('dateOfBirth', { length: 10 }).default(''),
+  location: varchar('location', { length: 128 }).default(''),
+  education: varchar('education', { length: 128 }).default(''),
+  work: varchar('work', { length: 128 }).default(''),
+  profilePicture: text('profilePicture').default(''),
+  fallRisk: varchar('fallRisk', { enum: ['yes', 'no'] }).default('no'),
+  promptAnswers: json('promptAnswers').$type<Record<string, string>>().default({}),
+  likes: text('likes').default(''),
+  dislikes: text('dislikes').default(''),
+  symptoms: text('symptoms').default(''),
+  avatar: text('avatar').default(''),
+  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt', { mode: 'date' }).notNull().defaultNow()
+});
+export type Patient = InferSelectModel<typeof patient>;
 export const avatar = pgTable('Avatar', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: varchar('name', { length: 64 }).notNull(),
@@ -151,7 +174,8 @@ export const call = pgTable('Call', {
   duration: integer('duration'), // in seconds
 
   // Relationships
-  userId: uuid('userId').references(() => user.id).notNull(),
+  userId: uuid('userId').references(() => patient.id).notNull(),
+  // patientId: uuid('patientId').references(() => patient.id).notNull(),
   avatarId: uuid('avatarId').references(() => avatar.id).notNull(),
 
   // Call details

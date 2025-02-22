@@ -2,19 +2,10 @@ import { compare } from 'bcrypt-ts';
 import NextAuth, { type User, type Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { getUser } from '@/lib/db/queries';
-
+import { getPatient } from '@/lib/db/queries';
 import { authConfig } from './auth.config';
 
-// Extend the User type to include role
-interface ExtendedUser extends User {
-  role: 'admin' | 'moderator' | 'user';
-}
 
-// Extend the Session type to include role
-interface ExtendedSession extends Session {
-  user: ExtendedUser;
-}
 
 export const {
   handlers: { GET, POST },
@@ -28,7 +19,7 @@ export const {
       credentials: {},
       async authorize({ email, password }: any) {
 
-        const users = await getUser(email);
+        const users = await getPatient(email);
 
         if (users.length === 0) return null;
         // biome-ignore lint: Forbidden non-null assertion.
@@ -44,7 +35,7 @@ export const {
       if (user) {
         token.id = user.id;
         // Add role to token
-        token.role = (user as ExtendedUser).role;
+
       }
 
       return token;
@@ -53,7 +44,7 @@ export const {
       session,
       token,
     }: {
-      session: ExtendedSession;
+      session: Session;
       token: any;
     }) {
       if (session.user) {

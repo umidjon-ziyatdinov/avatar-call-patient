@@ -1,5 +1,5 @@
 import { auth } from "@/app/(auth)/auth";
-import { getUserById, updateUser } from "@/lib/db/queries";
+import { getPatientById, getUserById, updateUser } from "@/lib/db/queries";
 import { User } from "@/lib/db/schema";
 import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
@@ -22,7 +22,7 @@ export async function GET() {
 
 
         if (session?.user?.id) {
-            const user = await getUserById({ id: session?.user.id });
+            const user = await getPatientById({ id: session?.user.id });
             if (!user) {
                 return new Response('User not found', { status: 404 });
             }
