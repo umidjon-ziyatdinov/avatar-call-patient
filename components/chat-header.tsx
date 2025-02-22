@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { User as UserType } from '@/lib/db/schema';
 
 interface ChatHeaderProps {
@@ -46,7 +46,9 @@ function PureChatHeader({ isAdmin, userInitials, userDetails, signOutAction }: C
       }
     });
   };
+  const pathname = usePathname();
 
+  if (pathname !== '/') return <></>;
   return (
     <header className="sticky top-0 flex items-center  justify-between bg-background px-2 py-1.5 md:px-2 z-10">
       <div className="flex items-center gap-2">

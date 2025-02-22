@@ -29,9 +29,10 @@ export default async function Layout({
         <div className='w-full flex flex-col items-center'>
         <div className='flex h-svh max-w-3xl w-full justify-center flex-col'>
 <TooltipProvider>
-
 <ChatHeaderServer />
-            <main className="flex bg-background pb-4 md:pb-6 gap-2  h-full max-w-full">
+            <main className="flex flex- col bg-background pb-4 md:pb-6 gap-2  h-full max-w-full">
+              
+
               {children}
             </main>
 

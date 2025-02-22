@@ -10,7 +10,7 @@ export async function ChatHeaderServer() {
   const userInitials = session?.user.name?.[0] ?? session?.user?.email?.[0] ?? 'U'
  
   const userDetails = session?.user.id &&  await getUserById({id: session.user.id}) 
-  console.log('userDetails', userDetails)
+
   return (
     <ChatHeader 
       isAdmin={isAdmin} 
