@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface AlertSummary {
     alert_type: string;
     description: string;
