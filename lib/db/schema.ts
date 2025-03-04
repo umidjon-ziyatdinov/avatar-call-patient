@@ -164,6 +164,28 @@ export const promptTemplate = pgTable('PromptTemplate', {
 export type PromptTemplate = InferSelectModel<typeof promptTemplate>;
 
 
+export const patientAvatars = pgTable('patientAvatars', {
+  // Primary key and metadata
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+  endedAt: timestamp('endedAt', { mode: 'date' }),
+  patienId: uuid('patientId').references(() => patient.id).notNull(),
+  avatarId: uuid('avatarId').references(() => avatar.id).notNull(),
+  userId: uuid('userId').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  // Call details
+  status: varchar('status', {
+    enum: ['active', 'inActive']
+  }).notNull().default('active'),
+
+
+
+
+});
+
+// Helper types
+export type PatientAvatars = InferSelectModel<typeof patientAvatars>;
+export type NewPatienAvatars = Omit<PatientAvatars, 'id' | 'createdAt '>;
+export type UpdatePatientAvatars = Partial<Omit<PatientAvatars, 'id' | 'createdAt'>>;
 
 
 export const call = pgTable('Call', {

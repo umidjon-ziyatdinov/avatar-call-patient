@@ -163,3 +163,99 @@ export const register = async (
   }
 };
 
+
+// Patient register 
+
+export const registerPatient = async (
+  _: RegisterActionState,
+  formData: FormData,
+): Promise<RegisterActionState> => {
+  try {
+    // Get all form fields
+    const rawData = {
+      email: formData.get('email'),
+      password: formData.get('password'),
+      passcode: formData.get('passcode'),
+      name: formData.get('name'),
+      avatar: formData.get('avatar'),
+    };
+
+    // Validate the form data
+    const validatedData = authFormSchema.parse({
+      email: rawData.email,
+      password: rawData.password,
+      passcode: rawData.passcode,
+      name: rawData.name,
+      avatar: rawData.avatar instanceof Blob ? rawData.avatar : undefined,
+    });
+
+    // Check if user already exists
+    const [existingUser] = await getUser(validatedData.email);
+    if (existingUser) {
+      return { status: 'user_exists' };
+    }
+
+    // Handle profile picture upload
+    let profilePictureUrl = '/images/default-profile.png';
+
+    if (validatedData.avatar) {
+      try {
+        const filename = `${validatedData.email}-${Date.now()}`;
+        const blob = await put(filename, validatedData.avatar, {
+          access: 'public',
+          addRandomSuffix: true,
+          // You can add content type validation here
+          contentType: validatedData.avatar.type,
+        });
+        profilePictureUrl = blob.url;
+      } catch (error) {
+        console.error('Failed to upload profile picture:', error);
+        // Continue with registration even if image upload fails
+        // You might want to return a specific status if image upload is crucial
+      }
+    }
+
+    // Hash password before storing
+    const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+
+    // Create user with all fields
+    await createUser({
+      email: validatedData.email,
+      password: hashedPassword,
+      name: validatedData.name,
+      passcode: parseInt(validatedData.passcode, 10),
+      role: 'user',
+      profilePicture: profilePictureUrl,
+      isActive: true,
+      patientDetails: null,
+      lastLoginAt: null,
+      verifiedAt: null,
+    });
+
+    // Sign in the user
+    await signIn('credentials', {
+      email: validatedData.email,
+      password: validatedData.password,
+      redirect: false,
+    });
+
+    return { status: 'success' };
+
+  } catch (error) {
+    console.error('Registration error:', error);
+
+    if (error instanceof z.ZodError) {
+      // You might want to return more specific validation errors
+      return {
+        status: 'invalid_data',
+        errors: error.errors.map(err => ({
+          field: err.path.join('.'),
+          message: err.message
+        }))
+      };
+    }
+
+    return { status: 'failed' };
+  }
+};
+

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { SubmitButton } from '@/components/submit-button';
-import { register, type RegisterActionState } from '../actions';
+import { register, registerPatient, type RegisterActionState } from '../actions';
 import { AuthForm } from '@/components/RegisterForm';
 
 export default function Page() {
@@ -14,7 +14,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   
   const [state, formAction] = useActionState<RegisterActionState, FormData>(
-    register,
+    registerPatient,
     {
       status: 'idle',
     },
