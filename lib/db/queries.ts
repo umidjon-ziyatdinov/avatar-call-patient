@@ -541,9 +541,9 @@ export async function getAllAvatarsForAdmin(userId: string,) {
   }
 }
 
-export async function getAvatarsByUser(patientId: string, isActive: boolean = true) {
+export async function getAvatarsByUser(userId: string, isActive: boolean = true) {
   try {
-    if (!patientId) return;
+    if (!userId) return;
 
     const avatars = await db
       .select({
@@ -567,11 +567,10 @@ export async function getAvatarsByUser(patientId: string, isActive: boolean = tr
         userId: avatar.userId
       })
       .from(avatar)
-      .leftJoin(patient, eq(patient.userId, avatar.userId))
       .where(
         and(
           or(
-            eq(patient.userId, patient.userId), // Avatars created by the user
+            eq(avatar.userId, userId), // Avatars created by the user
             isNull(avatar.userId) // Public avatars
           ),
           eq(avatar.isActive, isActive)

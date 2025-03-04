@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { z } from 'zod';
 import { auth } from '@/app/(auth)/auth';
+import { getPatientById } from '@/lib/db/query/patientQuery';
 
 const personalitySchema = z.object({
     memoryEngagement: z.number().min(0).max(100),
@@ -80,7 +81,9 @@ export async function GET(
             const avatars = await getAllAvatarsForAdmin(session?.user?.id);
             return NextResponse.json(avatars);
         }
-        const avatars = await getAvatarsByUser(session?.user?.id, true);
+        const currentPatient = await getPatientById({ id: session.user.id });
+
+        const avatars = await getAvatarsByUser(currentPatient.userId, true);
         return NextResponse.json(avatars);
     } catch (error) {
         console.error('GET /api/avatars error:', error);
