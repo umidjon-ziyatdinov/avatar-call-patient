@@ -316,7 +316,7 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
         }}
       >
         <DialogContent className="h-svh sm:max-h-[90vh] overflow-y-auto sm:max-w-[600px] p-0">
-          <DialogHeader className="sticky top-[-1px] bg-background z-10 shadow-md p-4 flex items-center justify-between">
+          <DialogHeader className="sticky top-[-1px] flex flex-row bg-background z-10 shadow-md p-4  items-center justify-between">
             <Button
               variant="ghost"
               onClick={() => {
@@ -326,7 +326,6 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
               className="text-sm font-medium hover:underline"
             >
               <ArrowLeft className="size-4 mr-2" />
-              Go Back
             </Button>
             <DialogTitle className="text-lg font-semibold">
               Create Avatar
