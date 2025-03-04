@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import Form from 'next/form';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Upload } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import Form from "next/form";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Upload } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function AuthForm({
   action,
   children,
-  defaultEmail = '',
+  defaultEmail = "",
 }: {
   action: NonNullable<
     string | ((formData: FormData) => void | Promise<void>) | undefined
@@ -30,16 +30,15 @@ export function AuthForm({
     }
   };
 
-
-
   const RequiredIndicator = () => (
-    <span className="text-red-500 ml-1" title="Required field">*</span>
+    <span className="text-red-500 ml-1" title="Required field">
+      *
+    </span>
   );
 
   return (
     <Form
       action={action}
- 
       className="w-full max-w-md mx-auto space-y-6 p-4 sm:p-6 md:p-8 flex flex-col gap-4  sm:px-16"
     >
       {/* Full Name Field */}
@@ -48,7 +47,8 @@ export function AuthForm({
           htmlFor="name"
           className="text-zinc-600 font-normal dark:text-zinc-400"
         >
-          Full Name<RequiredIndicator />
+          Full Name
+          <RequiredIndicator />
         </Label>
         <Input
           id="name"
@@ -68,7 +68,8 @@ export function AuthForm({
           htmlFor="email"
           className="text-zinc-600 font-normal dark:text-zinc-400"
         >
-          Email Address<RequiredIndicator />
+          Email Address
+          <RequiredIndicator />
         </Label>
         <Input
           id="email"
@@ -88,7 +89,8 @@ export function AuthForm({
           htmlFor="password"
           className="text-zinc-600 font-normal dark:text-zinc-400"
         >
-          Password<RequiredIndicator />
+          Password
+          <RequiredIndicator />
         </Label>
         <Input
           id="password"
@@ -101,32 +103,6 @@ export function AuthForm({
       </div>
 
       {/* Passcode Field */}
-      <div className="flex flex-col gap-2">
-        <Label
-          htmlFor="passcode"
-          className="text-zinc-600 font-normal dark:text-zinc-400"
-        >
-          4-Digit Passcode<RequiredIndicator />
-        </Label>
-        <Input
-          id="passcode"
-          name="passcode"
-          className={cn(
-            "bg-muted text-md md:text-sm tracking-widest text-center",
-            "font-mono text-lg"
-          )}
-          type="text"
-          pattern="\d{4}"
-          inputMode="numeric"
-          maxLength={4}
-          placeholder="••••"
-          required
-          onInput={(e) => {
-            const input = e.currentTarget;
-            input.value = input.value.replace(/\D/g, '').slice(0, 4);
-          }}
-        />
-      </div>
 
       {/* Profile Image Upload Section */}
       <div className="space-y-4">
@@ -136,7 +112,7 @@ export function AuthForm({
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="relative">
             <img
-              src={profileImage || '/images/default-profile.png'}
+              src={profileImage || "/images/default-profile.png"}
               alt="Profile preview"
               className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
             />
@@ -147,8 +123,18 @@ export function AuthForm({
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 title="Remove image"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             )}
@@ -173,7 +159,7 @@ export function AuthForm({
               )}
             >
               <Upload className="size-4" />
-              {profileImage ? 'Change Image' : 'Upload Image'}
+              {profileImage ? "Change Image" : "Upload Image"}
             </label>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
               Optional. Default avatar will be used if none provided.
@@ -182,9 +168,7 @@ export function AuthForm({
         </div>
       </div>
 
-  
-        {children}
-     
+      {children}
     </Form>
   );
 }

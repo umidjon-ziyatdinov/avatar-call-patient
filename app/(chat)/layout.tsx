@@ -8,6 +8,8 @@ import { ChatHeaderServer } from "@/components/chat-header-server";
 import { SplashWrapper } from "@/components/SplashScreenWrapper";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MobileNavigation } from "@/components/layout/BottomNavigation";
+import { getPatientById } from "@/lib/db/query/patientQuery";
+import { redirect } from "next/navigation";
 
 export const experimental_ppr = true;
 
@@ -16,9 +18,12 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const [session, cookieStore] = await Promise.all([auth(), cookies()]);
-  const isCollapsed = cookieStore.get("sidebar:state")?.value !== "true";
-
+  const session = await auth();
+  if (session?.user.id) {
+    const patient = await getPatientById({ id: session.user.id });
+    console.log("patient", patient);
+    if (patient && !patient.onboadringComplete) redirect("/onboarding");
+  }
   return (
     <>
       <Script

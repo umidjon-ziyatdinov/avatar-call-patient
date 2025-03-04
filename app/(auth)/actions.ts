@@ -6,6 +6,7 @@ import { createUser, getUser } from '@/lib/db/queries';
 import { put } from '@vercel/blob';
 import { signIn, signOut } from './auth';
 import { redirect } from 'next/navigation';
+import { createPatient } from '@/lib/db/query/patientQuery';
 
 const authFormSchema = z.object({
   email: z.string().email(),
@@ -79,7 +80,7 @@ export const register = async (
     const rawData = {
       email: formData.get('email'),
       password: formData.get('password'),
-      passcode: formData.get('passcode'),
+      passcode: formData.get('passcode') || 1234,
       name: formData.get('name'),
       avatar: formData.get('avatar'),
     };
@@ -175,7 +176,7 @@ export const registerPatient = async (
     const rawData = {
       email: formData.get('email'),
       password: formData.get('password'),
-      passcode: formData.get('passcode'),
+      passcode: formData.get('passcode') || '1234',
       name: formData.get('name'),
       avatar: formData.get('avatar'),
     };
@@ -219,7 +220,7 @@ export const registerPatient = async (
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
     // Create user with all fields
-    await createUser({
+    const newUser = await createUser({
       email: validatedData.email,
       password: hashedPassword,
       name: validatedData.name,
@@ -231,6 +232,30 @@ export const registerPatient = async (
       lastLoginAt: null,
       verifiedAt: null,
     });
+
+    if (newUser) {
+      const newPatient = await createPatient({
+        email: validatedData.email,
+        password: hashedPassword,
+        name: '',
+        profilePicture: '',
+        avatar: null,
+        userId: newUser.id,
+        about: null,
+        age: null,
+        sex: null,
+        dateOfBirth: null,
+        location: null,
+        education: null,
+        work: null,
+        fallRisk: null,
+        promptAnswers: null,
+        onboadringComplete: false,
+        likes: null,
+        dislikes: null,
+        symptoms: null,
+      });
+    }
 
     // Sign in the user
     await signIn('credentials', {

@@ -1,6 +1,6 @@
 "use client";
+import PatientOnboarding from "@/components/Onboarding/MainScreen";
 import React from "react";
-import PatientOnboarding from "../(chat)/components/PatientOnboarding";
 
 const page = () => {
   return <PatientOnboarding />;

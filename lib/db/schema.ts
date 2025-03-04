@@ -108,10 +108,13 @@ export const patient = pgTable('Patient', {
   dislikes: text('dislikes').default(''),
   symptoms: text('symptoms').default(''),
   avatar: text('avatar').default(''),
+  onboadringComplete: boolean('onboarding_complete').notNull().default(true),
   createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
   updatedAt: timestamp('updatedAt', { mode: 'date' }).notNull().defaultNow()
 });
 export type Patient = InferSelectModel<typeof patient>;
+export type NewPatient = Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdatePatient = Partial<Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>>;
 export const avatar = pgTable('Avatar', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: varchar('name', { length: 64 }).notNull(),
