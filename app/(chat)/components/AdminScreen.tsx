@@ -10,7 +10,7 @@ import {
 import { PatientEditDialog } from "./PatientsEditDialog";
 import { AvatarForm } from "@/components/AvatarEditForm";
 import { Button } from "@/components/ui/button";
-import { Avatar, User } from "@/lib/db/schema";
+import { Avatar, Patient, User } from "@/lib/db/schema";
 import AvatarList from "./AvatarList";
 import QuickActions from "./QuickActions";
 import { useState } from "react";
@@ -21,7 +21,7 @@ const AdminScreen = () => {
     data: patient,
     isLoading: patientLoading,
     mutate: refetchPatient,
-  } = useSWR<User>(`/api/patient`, fetcher);
+  } = useSWR<Patient>(`/api/patient`, fetcher);
   const {
     data: avatars,
     isLoading,
