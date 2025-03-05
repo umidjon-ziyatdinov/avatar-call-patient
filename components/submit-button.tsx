@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useFormStatus } from 'react-dom';
-import { LoaderIcon } from '@/components/icons';
-import { Button } from './ui/button';
+import { useFormStatus } from "react-dom";
+import { LoaderIcon } from "@/components/icons";
+import { Button } from "./ui/button";
 
 export function SubmitButton({
   children,
   isSuccessful,
   isLoading,
-  loadingText = 'Loading...',
-  className = '',
+  loadingText = "Loading...",
+  className = "",
 }: {
   children: React.ReactNode;
   isSuccessful?: boolean;
@@ -22,10 +22,10 @@ export function SubmitButton({
 
   return (
     <Button
-      type={isDisabled ? 'button' : 'submit'}
+      type={isDisabled ? "button" : "submit"}
       aria-disabled={isDisabled}
       disabled={isDisabled}
-      className={`relative  flex items-center justify-center ${className}"`}
+      className={`relative  flex items-center justify-center  ${className}`}
     >
       {isDisabled ? loadingText : children}
 
@@ -36,7 +36,7 @@ export function SubmitButton({
       )}
 
       <output aria-live="polite" className="sr-only">
-        {isDisabled ? loadingText : 'Submit form'}
+        {isDisabled ? loadingText : "Submit form"}
       </output>
     </Button>
   );

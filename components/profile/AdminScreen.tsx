@@ -269,7 +269,10 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
       {openPatientDialog && patient && (
         <PatientEditDialog
           patient={patient}
-          onClose={() => setOpenPatientDialog(false)}
+          onClose={() => {
+            setOpenPatientDialog(false);
+            refetchPatient();
+          }}
         />
       )}
 

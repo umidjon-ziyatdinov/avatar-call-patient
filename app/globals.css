@@ -21,6 +21,14 @@
         text-wrap: balance;
     }
 }
+.select-content {
+    max-width: calc(100vw - 32px);
+  }
+  
+  [data-radix-select-item] {
+    padding: 8px;
+    line-height: 1.4;
+  }
 
 @layer base {
     :root {

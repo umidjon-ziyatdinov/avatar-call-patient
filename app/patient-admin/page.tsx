@@ -1,5 +1,4 @@
 import { MobileNavigation } from "@/components/layout/BottomNavigation";
-import MobileHeader from "@/components/layout/MobileHeader";
 
 import { auth } from "../(auth)/auth";
 import AdminDashboard from "@/components/profile/AdminScreen";

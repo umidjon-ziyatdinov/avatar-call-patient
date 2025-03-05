@@ -16,7 +16,7 @@ const MobileHeader: React.FC<HeaderProps> = ({ title }) => {
   };
 
   return (
-    <header className="flex items-center justify-between h-14 px-4 bg-white border-b border-gray-200 w-full fixed top-0 left-0 z-10">
+    <header className="flex items-center justify-between h-14 px-4 bg-background border-b border-b-1 w-full fixed top-0 left-0 z-10">
       <div className="w-10">
         <Button
           variant="ghost"
