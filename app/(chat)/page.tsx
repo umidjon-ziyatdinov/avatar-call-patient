@@ -17,6 +17,7 @@ import useSWR from "swr";
 
 import { Avatar } from "@/lib/db/schema";
 import Image from "next/image";
+import { MobileNavigation } from "@/components/layout/BottomNavigation";
 
 interface AuthResponse {
   success: boolean;
@@ -97,23 +98,26 @@ export default function HomePage() {
   };
 
   return (
-    <div className="h-full bg-background flex flex-col items-center py-4 px-2 sm:px-4">
-      <div className="w-full max-w-2xl bg-card rounded-lg shadow-sm dark:shadow-primary/5 overflow-hidden">
-        {isLoading ? (
-          <div className="flex h-40 items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : !avatars?.length ? (
-          <div className="flex h-40 flex-col items-center justify-center gap-2 p-4">
-            <p className="text-lg font-medium">No chats available</p>
-            <p className="text-sm text-muted-foreground">
-              Please contact an administrator to set up avatars.
-            </p>
-          </div>
-        ) : (
-          <ChatList avatars={avatars} onSelectAvatar={handleSelectAvatar} />
-        )}
+    <>
+      <div className="h-full bg-background flex flex-col items-center py-4 px-2 sm:px-4">
+        <div className="w-full max-w-2xl bg-card rounded-lg shadow-sm dark:shadow-primary/5 overflow-hidden">
+          {isLoading ? (
+            <div className="flex h-40 items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : !avatars?.length ? (
+            <div className="flex h-40 flex-col items-center justify-center gap-2 p-4">
+              <p className="text-lg font-medium">No chats available</p>
+              <p className="text-sm text-muted-foreground">
+                Please contact an administrator to set up avatars.
+              </p>
+            </div>
+          ) : (
+            <ChatList avatars={avatars} onSelectAvatar={handleSelectAvatar} />
+          )}
+        </div>
       </div>
-    </div>
+      <MobileNavigation />
+    </>
   );
 }

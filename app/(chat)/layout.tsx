@@ -38,7 +38,6 @@ export default async function Layout({
               <main className="flex flex-col bg-background   gap-2 h-full max-w-full pb-16 md:pb-6">
                 {children}
               </main>
-              <MobileNavigation />
             </TooltipProvider>
           </div>
         </div>
