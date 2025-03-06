@@ -338,9 +338,9 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
                 </CardHeader>
                 <CardContent>
                   {avatarsLoading ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       {[1, 2].map((i) => (
-                        <Skeleton key={i} className="h-40 w-full rounded-lg" />
+                        <Skeleton key={i} className="h-20 w-full rounded-lg" />
                       ))}
                     </div>
                   ) : (
