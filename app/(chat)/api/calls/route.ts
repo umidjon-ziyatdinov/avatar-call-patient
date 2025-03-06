@@ -1,5 +1,6 @@
 import { auth } from "@/app/(auth)/auth";
 import { createNewCall, getAllCallsByUserId, getCallByUserAndAvatarId } from "@/lib/db/queries";
+import { getPatientById } from "@/lib/db/query/patientQuery";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -145,6 +146,7 @@ export async function GET(request: Request) {
                     total: calls.length
                 });
             }
+
             const calls = await getAllCallsByUserId(session.user.id);
             return NextResponse.json({
                 success: true,
@@ -152,22 +154,8 @@ export async function GET(request: Request) {
                 total: calls.length
             });
 
-            // 4. Transform and sort calls if needed
-            // const processedCalls = calls
-            //     .sort((a, b) => new Date(b.technicalDetails?.startTime).getTime() - new Date(a?.technicalDetails?.startTime).getTime())
-            //     .map(call => ({
-            //         ...call,
-            //         duration: call.endTime 
-            //             ? new Date(call.endTime).getTime() - new Date(call.startTime).getTime() 
-            //             : undefined
-            //     }));
 
-            // 5. Return successful response
-            return NextResponse.json({
-                success: true,
-                data: calls,
-                total: calls.length
-            });
+
 
         } catch (dbError) {
             console.error('Database error:', dbError);

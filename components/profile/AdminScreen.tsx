@@ -46,7 +46,9 @@ import { useTheme } from "next-themes";
 import { User, Avatar as AvatarType, Patient } from "@/lib/db/schema";
 import AvatarList from "@/app/(chat)/components/AvatarList";
 import { PatientEditDialog } from "@/app/(chat)/components/PatientsEditDialog";
-import CallHistoryScreen from "@/app/(chat)/components/CallHistoryScreen";
+import CallHistoryScreen, {
+  CallData,
+} from "@/app/(chat)/components/CallHistoryScreen";
 import { AvatarForm } from "../AvatarEditForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import AvatarCreationForm from "../avatar/AvatarCreation";
@@ -143,12 +145,14 @@ const PatientOverview = ({
 const QuickActions = ({
   patient,
   onViewCallLogs,
+  calls,
 }: {
   patient?: Patient;
+  calls?: CallData[];
   onViewCallLogs: () => void;
 }) => {
-  const callLogsCount = 5; // This would ideally come from an API or prop
-  const hasRisk = patient?.fallRisk === "yes";
+  // This would ideally come from an API or prop
+  const hasRisk = false;
 
   return (
     <Card className="relative">
@@ -187,12 +191,12 @@ const QuickActions = ({
             <div>
               <div className="flex items-center gap-2">
                 <p className="text-sm font-medium">Call Logs</p>
-                {callLogsCount > 0 && (
+                {Array.isArray(calls) && calls?.length > 0 && (
                   <Badge
                     variant={hasRisk ? "destructive" : "secondary"}
                     className="px-1.5 py-0 text-xs"
                   >
-                    {callLogsCount}
+                    {calls?.length}
                   </Badge>
                 )}
               </div>
@@ -263,7 +267,7 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
   const [openCallDialog, setOpenCallDialog] = useState(false);
   const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarType | null>(null);
-
+  const { data: calls, isLoading, mutate } = useSWR("/api/calls", fetcher);
   // SWR data fetching
   const {
     data: patient,
@@ -300,6 +304,7 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
         {/* Quick Actions */}
         <QuickActions
           patient={patient}
+          calls={calls?.data}
           onViewCallLogs={() => setOpenCallDialog(true)}
         />
 

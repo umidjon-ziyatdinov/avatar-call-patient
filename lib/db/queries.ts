@@ -463,11 +463,33 @@ export async function getAvatarById({ id }: { id: string }) {
 
 export async function getCallById({ id }: { id: string }) {
   try {
-    const result = await db
-      .select()
-      .from(call)
-      .where(eq(call.id, id))
-      .limit(1);
+    const result = await db.select({
+      id: call.id,
+      createdAt: call.createdAt,
+      endedAt: call.endedAt,
+      duration: call.duration,
+      userId: call.userId,
+      avatarId: call.avatarId,
+      status: call.status,
+      recordingUrl: call.recordingUrl,
+      transcriptUrl: call.transcriptUrl,
+      qualityMetrics: call.qualityMetrics,
+      conversationMetrics: call.conversationMetrics,
+      technicalDetails: call.technicalDetails,
+      errorLogs: call.errorLogs,
+      metadata: call.metadata,
+      analysis: call.analysis,
+      prompt: call.prompt,
+      // Avatar fields
+      avatarName: avatar.name,
+      avatarRole: avatar.role,
+      avatarImage: avatar.avatarImage,
+      name: patient.name,
+      age: patient.age,
+      profilePicture: patient.profilePicture,
+      sex: patient.sex
+
+    }).from(call).leftJoin(avatar, eq(call.avatarId, avatar.id)).leftJoin(patient, eq(call.userId, patient.id)).where(eq(call.id, id)).limit(1);
 
     return result[0] || null;
   } catch (error) {
@@ -508,11 +530,22 @@ export async function getAllCallsByUserId(id: string) {
       technicalDetails: call.technicalDetails,
       errorLogs: call.errorLogs,
       metadata: call.metadata,
+      analysis: call.analysis,
+      prompt: call.prompt,
       // Avatar fields
       avatarName: avatar.name,
       avatarRole: avatar.role,
-      avatarImage: avatar.avatarImage
-    }).from(call).leftJoin(avatar, eq(call.avatarId, avatar.id)).where(eq(call.userId, id));
+      avatarImage: avatar.avatarImage,
+      patientAge: patient.age,
+      patientProfilePicture: patient.profilePicture,
+      patientSex: patient.sex,
+      patientEmail: patient.email,
+      patientLocation: patient.location,
+      patientEducation: patient.education,
+      patientWork: patient.work,
+      patientName: patient.name,
+
+    }).from(call).leftJoin(avatar, eq(call.avatarId, avatar.id)).leftJoin(patient, eq(call.userId, patient.id)).where(eq(call.userId, id));
     return calls;
   } catch (error) {
     console.error('Error getting all avatars:', error);
