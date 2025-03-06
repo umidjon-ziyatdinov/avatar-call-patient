@@ -1,6 +1,6 @@
 
-import { eq } from "drizzle-orm";
-import { NewPatient, patient, UpdatePatient } from "../schema";
+import { and, eq } from "drizzle-orm";
+import { NewPatient, patient, UpdatePatient, user } from "../schema";
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -42,6 +42,35 @@ export async function getPatientById({ id }: { id: string }) {
     }
 }
 
+
+
+export async function getAdminDetailbyPatientId({ id }: { id: string }) {
+    console.log('userId', id);
+    try {
+        const [foundUser] = await db
+            .select({
+                name: user.name,
+                email: user.email,
+                passcode: user.passcode,
+                patientId: patient.id,
+                role: user.role
+            })
+            .from(patient)
+            .leftJoin(user, eq(user.id, patient.userId)) // Fix: Use patient.userId
+            .where(eq(patient.id, id)) // Fix: Remove `user.role` condition
+            .limit(1);
+
+        // Ensure user role is 'user' if the user exists
+        if (foundUser && foundUser.role !== 'user') {
+            return null;
+        }
+
+        return foundUser || null;
+    } catch (error) {
+        console.error('Error getting user by id:', error);
+        throw new Error('Failed to get user');
+    }
+}
 
 export async function updatePatient({
     id,

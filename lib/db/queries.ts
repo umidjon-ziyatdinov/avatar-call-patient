@@ -636,6 +636,8 @@ export async function getPatientById({ id }: { id: string }) {
   }
 }
 
+
+
 export async function getUserByEmail({ email }: { email: string }) {
   try {
     const [foundUser] = await db

@@ -17,36 +17,37 @@ const personalitySchema = z.object({
 const createAvatarSchema = z.object({
     name: z.string().min(1, "Name is required").max(64, "Name is too long"),
     role: z.string().min(1, "Role is required").max(64, "Role is too long"),
-    avatarImage: z.string().url("Invalid avatar URL"),
+    avatarImage: z.string().optional().default(''), // Matches Drizzle's default('')
     about: z.string().default(''),
     age: z.coerce.number().min(0).max(150).default(0),
     sex: z.string().max(16).default(''),
     education: z.string().default(''),
     work: z.string().default(''),
-    prompt1: z.enum(InteractionPrompts, {
-        errorMap: () => ({ message: "Invalid prompt selection" })
-    }).default('family'),
-    prompt2: z.enum(InteractionPrompts, {
-        errorMap: () => ({ message: "Invalid prompt selection" })
-    }).default('daily'),
-    prompt3: z.enum(InteractionPrompts, {
-        errorMap: () => ({ message: "Invalid prompt selection" })
-    }).default('memories'),
+    promptAnswers: z.array(z.unknown()).default([]), // Matches jsonb default([])
+
     personality: personalitySchema.default({
         memoryEngagement: 50,
         anxietyManagement: 50,
         activityEngagement: 50,
         socialConnection: 50
     }),
+
+    isActive: z.boolean().default(false),
+
     openaiVoice: z.enum(OpenAIVoices, {
         errorMap: () => ({ message: "Invalid OpenAI voice" })
     }).default('alloy'),
+
     openaiModel: z.enum(OpenAIModels, {
         errorMap: () => ({ message: "Invalid OpenAI model" })
     }).default('gpt-4o-realtime-preview'),
 
+    simliFaceId: z.string().uuid().optional().nullable(), // Matches uuid with default(null)
+    simliCharacterId: z.string().uuid().optional().nullable(),
+
     initialPrompt: z.string().min(1, "Initial prompt is required"),
-    isActive: z.boolean().default(false)
+
+    userId: z.string().uuid().optional().nullable() // Matches foreign key to user.id
 });
 
 function parseFormData(formData: FormData) {
@@ -76,9 +77,11 @@ export async function GET(
             return new Response('Unauthorized', { status: 401 });
         }
         const { searchParams } = new URL(request.url);
+
         const isAdmin = searchParams.get('isAdmin');
         if (isAdmin) {
-            const avatars = await getAllAvatarsForAdmin(session?.user?.id);
+            const patient = await getPatientById({ id: session?.user?.id })
+            const avatars = await getAllAvatarsForAdmin(patient.userId);
             return NextResponse.json(avatars);
         }
         const currentPatient = await getPatientById({ id: session.user.id });
@@ -225,6 +228,16 @@ export async function POST(request: Request) {
                 );
             }
         }
+        if (parsedData.personality) {
+            try {
+                parsedData.promptAnswers = JSON.parse(parsedData.promptAnswers);
+            } catch {
+                return NextResponse.json(
+                    { error: "Invalid personality JSON." },
+                    { status: 400 }
+                );
+            }
+        }
 
         const data = {
             ...parsedData,
@@ -252,12 +265,14 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
+
+        const patient = await getPatientById({ id: session.user.id })
         // Create avatar only if face generation was successful
         const newAvatar = await createAvatar({
             ...validatedData,
             simliFaceId: null,
             simliCharacterId: simliResponse.simliCharacterId,
-            userId: session?.user?.role === 'admin' ? null : session.user.id,
+            userId: patient.userId,
         });
 
         // Prepare response with detailed information
@@ -301,8 +316,7 @@ The face generation has been queued and will be processed shortly. You can:
             );
         }
 
-        // Handle unexpected errors
-        console.error("POST /api/avatars error:", error);
+
         return NextResponse.json(
             {
                 error: "Internal Server Error",

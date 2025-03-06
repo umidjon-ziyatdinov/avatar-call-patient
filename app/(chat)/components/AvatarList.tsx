@@ -20,6 +20,7 @@ const AvatarList = ({ avatars, onSelectAvatar }: AvatarListProps) => {
         icon: <Globe className="size-5 text-yellow-500" />,
       });
     } else {
+      onSelectAvatar(avatar);
       // Your existing edit logic here
     }
   };
@@ -42,11 +43,7 @@ const AvatarList = ({ avatars, onSelectAvatar }: AvatarListProps) => {
             }}
             className="w-full text-left border border-1 p-4 transition-colors hover:bg-accent/50 focus:outline-none focus:bg-accent/50"
           >
-            <div
-              className={`flex items-center  ${
-                index !== avatars.length - 1 ? "border-b border-border/40" : ""
-              }`}
-            >
+            <div className="flex items-center">
               {/* Avatar Image with Status */}
               <div className="relative mr-4">
                 <Image
