@@ -1,9 +1,8 @@
 // app/OnboardingWrapper.tsx
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Splash } from './Splash';
-
+import React, { useState } from "react";
+import { Splash } from "./Splash";
 
 interface OnboardingWrapperProps {
   children: React.ReactNode;
@@ -15,7 +14,11 @@ export function SplashWrapper({ children }: OnboardingWrapperProps) {
   return (
     <>
       <Splash onComplete={() => setShowContent(true)} />
-      <div className={`transition-opacity duration-500 ${showContent ? 'opacity-100' : 'opacity-0'} w-full`}>
+      <div
+        className={`transition-opacity duration-500 ${
+          showContent ? "opacity-100" : "opacity-0"
+        } max-h-svh w-full`}
+      >
         {children}
       </div>
     </>

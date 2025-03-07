@@ -7,8 +7,15 @@ import useSWR from "swr";
 import PasscodeScreen from "./PasscodeScreen";
 import AdminDashboard from "@/components/profile/AdminScreen";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
-const ProtectedAdmin = ({ patientId }: { patientId: string }) => {
+const ProtectedAdmin = ({
+  patientId,
+  signOutAction,
+}: {
+  patientId: string;
+  signOutAction: () => Promise<{ success: boolean; error?: string }>;
+}) => {
   const [initialRender, setInitialRender] = useState(true);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   // SWR data fetching
@@ -22,8 +29,14 @@ const ProtectedAdmin = ({ patientId }: { patientId: string }) => {
     setIsAuthenticating(true);
     try {
       if (String(code) === String(user?.passcode)) {
-        setInitialRender(false);
-        toast.success(`Welcome to Admin Dashboard, ${user?.name}`);
+        setTimeout(() => {
+          setInitialRender(false);
+          setIsAuthenticating(false);
+          toast.success(`Welcome to Admin Dashboard, ${user?.name}`);
+        }, 300);
+      } else {
+        console.error("Authorization failed: Admin  passcode invalid");
+        toast.error("Authentication failed. Please try again.");
       }
     } catch (error) {
       console.error("Authorization failed:", error);
@@ -32,17 +45,25 @@ const ProtectedAdmin = ({ patientId }: { patientId: string }) => {
       setIsAuthenticating(false);
     }
   };
+
   if (initialRender) {
     return (
       <div className="w-full h-full flex items-center justify-center py-8">
-        <PasscodeScreen
-          onSubmit={handlePasscodeSubmit}
-          isAuthenticating={isAuthenticating}
-        />
+        {patientLoading ? (
+          <div className="flex h-40 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <PasscodeScreen
+            onSubmit={handlePasscodeSubmit}
+            isAuthenticating={isAuthenticating}
+          />
+        )}
       </div>
     );
   }
-  return <AdminDashboard patientId={patientId} />;
+
+  return <AdminDashboard patientId={patientId} signOutAction={signOutAction} />;
 };
 
 export default ProtectedAdmin;

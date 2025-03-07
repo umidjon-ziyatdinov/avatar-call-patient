@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import {
   Users,
   Clock,
@@ -15,8 +15,15 @@ import {
   LogOut,
   Moon,
   Sun,
+  Eye,
+  EyeOff,
+  Lock,
+  Key,
   ChevronRight,
 } from "lucide-react";
+
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import useSWR from "swr";
 import { motion } from "framer-motion";
 import { fetcher } from "@/lib/utils";
@@ -52,6 +59,8 @@ import CallHistoryScreen, {
 import { AvatarForm } from "../AvatarEditForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import AvatarCreationForm from "../avatar/AvatarCreation";
+import PasscodeScreen from "../Onboarding/PasscodeScreen";
+import { useRouter } from "next/navigation";
 
 // Patient Overview Component
 const PatientOverview = ({
@@ -219,7 +228,7 @@ const QuickActions = ({
 };
 
 // Top Header Component
-const TopHeader = () => {
+const TopHeader = ({ signOutAction }: { signOutAction: () => void }) => {
   const { theme, setTheme } = useTheme();
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
@@ -250,7 +259,7 @@ const TopHeader = () => {
           title="Sign Out"
           onClick={() => {
             // TODO: Implement sign out logic
-            toast.error("Sign out functionality not implemented");
+            signOutAction();
           }}
         >
           <LogOut className="h-5 w-5" />
@@ -260,7 +269,13 @@ const TopHeader = () => {
   );
 };
 
-const AdminDashboard = ({ patientId }: { patientId: string }) => {
+const AdminDashboard = ({
+  patientId,
+  signOutAction,
+}: {
+  patientId: string;
+  signOutAction: () => Promise<{ success: boolean; error?: string }>;
+}) => {
   // State management
   const [activeTab, setActiveTab] = useState<string>("avatars");
   const [openPatientDialog, setOpenPatientDialog] = useState(false);
@@ -268,6 +283,19 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
   const [openAvatarDialog, setOpenAvatarDialog] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarType | null>(null);
   const { data: calls, isLoading, mutate } = useSWR("/api/calls", fetcher);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [showPasscodeDialog, setShowPasscodeDialog] = useState(false);
+  const [passcodeSubmitting, setPasscodeSubmitting] = useState(false);
+  // Password state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   // SWR data fetching
   const {
     data: patient,
@@ -286,14 +314,102 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
     setOpenAvatarDialog(false);
     refetchAvatars();
   };
+  const handleSignOut = () => {
+    startTransition(async () => {
+      const result = await signOutAction();
+      window.location.reload();
+      if (result.success) {
+        router.push("/login");
+      }
+    });
+  };
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingPassword(true);
+
+    // Validate passwords
+    if (newPassword !== confirmPassword) {
+      toast.error("New passwords don't match");
+      setIsSubmittingPassword(false);
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      setIsSubmittingPassword(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/patient/${patientId}/password`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update password");
+      }
+
+      toast.success("Password changed successfully");
+
+      // Reset form and close dialog
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setShowPasswordDialog(false);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update password"
+      );
+    } finally {
+      setIsSubmittingPassword(false);
+    }
+  };
+
+  // Passcode change handler
+  const handlePasscodeChange = async (code: string) => {
+    setPasscodeSubmitting(true);
+    try {
+      const response = await fetch(`/api/patient/${patientId}/passcode`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newPasscode: code,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update passcode");
+      }
+      toast.success("Security passcode changed successfully");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update password"
+      );
+    }
+    setTimeout(() => {
+      setPasscodeSubmitting(false);
+      setShowPasscodeDialog(false);
+    }, 500);
+  };
 
   return (
-    <div className="min-h-full bg-background dark:bg-background/80 pt-4 px-2 pb-[70px] md:p-8">
+    <div className="h-full bg-background dark:bg-background/80 pt-4 px-2  md:p-8">
       {/* Top Header with Theme Toggle and Sign Out */}
-      <TopHeader />
+      <TopHeader signOutAction={handleSignOut} />
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 pb-[70px] gap-6">
         {/* Patient Overview Card */}
         <PatientOverview
           patient={patient}
@@ -374,12 +490,28 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span>Enable Advanced Reporting</span>
-                    <Switch />
+                    <div className="flex items-center gap-2">
+                      <Lock className="h-4 w-4 text-muted-foreground" />
+                      <span>Change Admin Password</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowPasswordDialog(true)}
+                    >
+                      Update
+                    </Button>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span>Research Data Sharing</span>
-                    <Switch />
+                    <div className="flex items-center gap-2">
+                      <Key className="h-4 w-4 text-muted-foreground" />
+                      <span>Change Security Passcode</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowPasscodeDialog(true)}
+                    >
+                      Update
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -459,6 +591,168 @@ const AdminDashboard = ({ patientId }: { patientId: string }) => {
             </DialogTitle>
           </DialogHeader>
           <AvatarCreationForm onClose={() => handleCloseAvatarDialog()} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+        <DialogContent className="h-svh sm:max-h-[90vh] flex flex-col overflow-y-auto sm:max-w-[600px] p-0">
+          <DialogHeader className="sticky top-[-1px] flex flex-row bg-background z-10 shadow-md p-4 max-h-[64px] items-center justify-between">
+            <Button
+              variant="ghost"
+              onClick={() => setShowPasswordDialog(false)}
+              className="text-sm font-medium hover:underline"
+            >
+              <ArrowLeft className="size-4 mr-2" />
+            </Button>
+            <DialogTitle className="text-lg font-semibold">
+              Change Password
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="p-6 space-y-6">
+            <form onSubmit={handlePasswordChange} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="current-password">Current Password</Label>
+                <div className="relative">
+                  <Input
+                    id="current-password"
+                    type={showCurrentPassword ? "text" : "password"}
+                    placeholder="Enter your current password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                    disabled={isSubmittingPassword}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    disabled={isSubmittingPassword}
+                  >
+                    {showCurrentPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="new-password">New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="new-password"
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    disabled={isSubmittingPassword}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    disabled={isSubmittingPassword}
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Password must be at least 4 characters and include a
+                  combination of letters, numbers.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirm-password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    disabled={isSubmittingPassword}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isSubmittingPassword}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="pt-4 flex justify-end space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowPasswordDialog(false)}
+                  disabled={isSubmittingPassword}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmittingPassword}>
+                  {isSubmittingPassword ? (
+                    <>
+                      <motion.div
+                        className="animate-spin mr-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      >
+                        ◌
+                      </motion.div>
+                      Updating...
+                    </>
+                  ) : (
+                    "Update Password"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Passcode Change Dialog */}
+      <Dialog open={showPasscodeDialog} onOpenChange={setShowPasscodeDialog}>
+        <DialogContent className="h-svh sm:max-h-[90vh] flex flex-col overflow-y-auto sm:max-w-[600px] p-0">
+          <DialogHeader className="sticky top-[-1px] flex flex-row bg-background z-10 shadow-md p-4 max-h-[64px] items-center justify-between">
+            <Button
+              variant="ghost"
+              onClick={() => setShowPasscodeDialog(false)}
+              className="text-sm font-medium hover:underline"
+            >
+              <ArrowLeft className="size-4 mr-2" />
+            </Button>
+            <DialogTitle className="text-lg font-semibold">
+              Change Security Passcode
+            </DialogTitle>
+          </DialogHeader>
+
+          <PasscodeScreen
+            onSubmit={handlePasscodeChange}
+            isAuthenticating={passcodeSubmitting}
+          />
         </DialogContent>
       </Dialog>
     </div>
