@@ -750,6 +750,7 @@ const AdminDashboard = ({
           </DialogHeader>
 
           <PasscodeScreen
+            title="Reset Admin Passcode"
             onSubmit={handlePasscodeChange}
             isAuthenticating={passcodeSubmitting}
           />
