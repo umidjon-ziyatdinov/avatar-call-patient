@@ -6,7 +6,9 @@ import NumPadButton from "../common/NumpadButton";
 const PasscodeScreen = ({
   onSubmit,
   isAuthenticating,
+  title = "Create Admin Password",
 }: {
+  title?: string;
   onSubmit: (code: string) => void;
   isAuthenticating: boolean;
 }) => {
@@ -81,7 +83,7 @@ const PasscodeScreen = ({
       ) : (
         <>
           <h2 className="text-2xl font-semibold">
-            {isConfirmStep ? "Confirm Your Passcode" : "Create Admin Passcode"}
+            {isConfirmStep ? "Confirm Your Passcode" : title}
           </h2>
           <p className="text-center text-muted-foreground">
             {isConfirmStep
