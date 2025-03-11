@@ -2,7 +2,7 @@
 
 import { Patient, User } from "@/lib/db/schema";
 import { fetcher } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import PasscodeScreen from "./PasscodeScreen";
 import AdminDashboard from "@/components/profile/AdminScreen";
@@ -16,8 +16,17 @@ const ProtectedAdmin = ({
   patientId: string;
   signOutAction: () => Promise<{ success: boolean; error?: string }>;
 }) => {
-  const [initialRender, setInitialRender] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  // Get the passcode requirement from localStorage
+  const [showPasscode, setShowPasscode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("showPasscodeScreen") === "true";
+    }
+    return false;
+  });
+
   // SWR data fetching
   const {
     data: user,
@@ -25,17 +34,37 @@ const ProtectedAdmin = ({
     mutate: refetchPatient,
   } = useSWR<User>(`/api/patient/admin/${patientId}`, fetcher);
 
+  // Reset authentication when showPasscode changes
+  useEffect(() => {
+    if (!showPasscode) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [showPasscode]);
+
+  // Listen for localStorage changes
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "showPasscodeScreen") {
+        setShowPasscode(e.newValue === "true");
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   const handlePasscodeSubmit = async (code: string) => {
     setIsAuthenticating(true);
     try {
       if (String(code) === String(user?.passcode)) {
         setTimeout(() => {
-          setInitialRender(false);
+          setIsAuthenticated(true);
           setIsAuthenticating(false);
           toast.success(`Welcome to Admin Dashboard, ${user?.name}`);
         }, 300);
       } else {
-        console.error("Authorization failed: Admin  passcode invalid");
         toast.error("Authentication failed. Please try again.");
       }
     } catch (error) {
@@ -46,19 +75,22 @@ const ProtectedAdmin = ({
     }
   };
 
-  if (initialRender) {
+  if (patientLoading) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Show passcode screen if required and not authenticated
+  if (showPasscode && !isAuthenticated) {
     return (
       <div className="w-full h-full flex items-center justify-center py-8">
-        {patientLoading ? (
-          <div className="flex h-40 items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : (
-          <PasscodeScreen
-            onSubmit={handlePasscodeSubmit}
-            isAuthenticating={isAuthenticating}
-          />
-        )}
+        <PasscodeScreen
+          onSubmit={handlePasscodeSubmit}
+          isAuthenticating={isAuthenticating}
+        />
       </div>
     );
   }

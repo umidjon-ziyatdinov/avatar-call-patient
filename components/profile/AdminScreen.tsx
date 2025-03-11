@@ -295,6 +295,16 @@ const AdminDashboard = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [requirePasscode, setRequirePasscode] = useState(() => {
+    // Initialize from localStorage if available, default to false
+    return localStorage.getItem("showPasscodeScreen") === "true";
+  });
+
+  const handlePasscodeToggle = (checked: boolean) => {
+    setRequirePasscode(checked);
+    localStorage.setItem("showPasscodeScreen", checked.toString());
+    toast.success(`Passcode requirement ${checked ? "enabled" : "disabled"}`);
+  };
   const router = useRouter();
   // SWR data fetching
   const {
@@ -489,6 +499,17 @@ const AdminDashboard = ({
                   <CardTitle>Admin Settings</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-muted-foreground" />
+                      <span>Require Passcode</span>
+                    </div>
+                    <Switch
+                      checked={requirePasscode}
+                      onCheckedChange={handlePasscodeToggle}
+                      aria-label="Toggle passcode requirement"
+                    />
+                  </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <Lock className="h-4 w-4 text-muted-foreground" />
