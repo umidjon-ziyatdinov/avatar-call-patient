@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Homepage specific variables */
+    --homepage-background: hsl(0, 0%, 100%);
+    --homepage-foreground: hsl(224, 25%, 15%);
+
+    --homepage-card: hsl(0, 0%, 100%);
+    --homepage-card-foreground: hsl(224, 25%, 15%);
+
+    --homepage-popover: hsl(0, 0%, 100%);
+    --homepage-popover-foreground: hsl(224, 25%, 15%);
+
+    --homepage-primary: hsl(196, 82%, 46%);
+    --homepage-primary-foreground: hsl(210, 40%, 98%);
+
+    --homepage-secondary: hsl(164, 60%, 40%);
+    --homepage-secondary-foreground: hsl(210, 40%, 98%);
+
+    --homepage-accent: hsl(24, 90%, 65%);
+    --homepage-accent-foreground: hsl(210, 40%, 98%);
+
+    --homepage-muted: hsl(210, 40%, 96%);
+    --homepage-muted-foreground: hsl(215, 20%, 45%);
+
+    --homepage-destructive: hsl(0, 84%, 60%);
+    --homepage-destructive-foreground: hsl(210, 40%, 98%);
+
+    --homepage-border: hsl(214, 32%, 91%);
+    --homepage-input: hsl(214, 32%, 91%);
+    --homepage-ring: hsl(196, 82%, 46%);
+
+    --homepage-radius: 0.5rem;
+  }
+
+  .dark {
+    --homepage-background: hsl(224, 25%, 15%);
+    --homepage-foreground: hsl(210, 40%, 98%);
+
+    --homepage-card: hsl(224, 25%, 18%);
+    --homepage-card-foreground: hsl(210, 40%, 98%);
+
+    --homepage-popover: hsl(224, 25%, 18%);
+    --homepage-popover-foreground: hsl(210, 40%, 98%);
+
+    --homepage-primary: hsl(196, 82%, 46%);
+    --homepage-primary-foreground: hsl(210, 40%, 98%);
+
+    --homepage-secondary: hsl(164, 60%, 40%);
+    --homepage-secondary-foreground: hsl(210, 40%, 98%);
+
+    --homepage-accent: hsl(24, 90%, 65%);
+    --homepage-accent-foreground: hsl(210, 40%, 98%);
+
+    --homepage-muted: hsl(215, 27%, 25%);
+    --homepage-muted-foreground: hsl(215, 20%, 65%);
+
+    --homepage-destructive: hsl(0, 84%, 60%);
+    --homepage-destructive-foreground: hsl(210, 40%, 98%);
+
+    --homepage-border: hsl(215, 27%, 25%);
+    --homepage-input: hsl(215, 27%, 25%);
+    --homepage-ring: hsl(196, 82%, 46%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-homepage-border;
+  }
+  body {
+    @apply bg-homepage-background text-homepage-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
+  }
+}

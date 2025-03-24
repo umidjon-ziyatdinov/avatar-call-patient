@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { auth } from "../(auth)/auth";
+
 import Script from "next/script";
 import { ChatHeaderServer } from "@/components/chat-header-server";
 import { SplashWrapper } from "@/components/SplashScreenWrapper";
@@ -10,6 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { MobileNavigation } from "@/components/layout/BottomNavigation";
 import { getPatientById } from "@/lib/db/query/patientQuery";
 import { redirect } from "next/navigation";
+import { auth } from "@/app/(auth)/auth";
 
 export const experimental_ppr = true;
 
