@@ -19,7 +19,7 @@ const config: Config = {
 		},
 		fontFamily: {
 			sans: [
-				'geist'
+				'var(--font-inter)', 'geist'
 			],
 			mono: [
 				'geist-mono'

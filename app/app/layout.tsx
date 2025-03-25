@@ -4,7 +4,7 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 
-import "./globals.css";
+import "./app.css";
 import ScreenSizeChecker from "@/components/ScreenSizeChecker";
 
 export const metadata: Metadata = {

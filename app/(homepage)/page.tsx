@@ -1,7 +1,12 @@
 import React from "react";
+import ReminisceHero from "./Components/Hero";
 
 const Home = () => {
-  return <div style={{ backgroundColor: "hsl(224, 25%, 15%)" }}>Home</div>;
+  return (
+    <div>
+      <ReminisceHero />
+    </div>
+  );
 };
 
 export default Home;

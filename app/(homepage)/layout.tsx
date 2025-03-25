@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Nunito } from "next/font/google";
+import { Inter, Karla, Nunito } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 
-import "./globals.css";
-import ScreenSizeChecker from "@/components/ScreenSizeChecker";
+import "./global.css";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Reminisce Ai",
@@ -14,6 +15,12 @@ export const metadata: Metadata = {
 };
 
 const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const karla = Karla({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
@@ -57,7 +64,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${nunito.variable}`}
+      className={`${karla.variable} ${nunito.variable}`}
     >
       <head>
         <script
@@ -74,7 +81,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster position="top-center" />
+          <Navbar />
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
