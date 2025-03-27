@@ -51,11 +51,11 @@ import { useTheme } from "next-themes";
 
 // TypeScript interfaces
 import { User, Avatar as AvatarType, Patient } from "@/lib/db/schema";
-import AvatarList from "@/app/(chat)/components/AvatarList";
-import { PatientEditDialog } from "@/app/(chat)/components/PatientsEditDialog";
+import AvatarList from "@/app/app/(chat)/components/AvatarList";
+import { PatientEditDialog } from "@/app/app/(chat)/components/PatientsEditDialog";
 import CallHistoryScreen, {
   CallData,
-} from "@/app/(chat)/components/CallHistoryScreen";
+} from "@/app/app/(chat)/components/CallHistoryScreen";
 import { AvatarForm } from "../AvatarEditForm";
 import { Skeleton } from "@/components/ui/skeleton";
 import AvatarCreationForm from "../avatar/AvatarCreation";

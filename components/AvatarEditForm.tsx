@@ -42,7 +42,7 @@ import {
 } from "./ui/dialog";
 
 import useSWR from "swr";
-import MobileVideoChat from "@/app/(chat)/components/mobile-videochat";
+import MobileVideoChat from "@/app/app/(chat)/components/mobile-videochat";
 
 // Voice descriptions - moved from PersonalizationScreen
 const VoiceDescriptions = {
@@ -202,7 +202,8 @@ const BasicInfoSection = ({
               placeholder="Brief description of this avatar's background and purpose"
             />
             <p className="text-xs text-gray-500">
-              A brief description that helps establish this avatar's identity
+              A brief description that helps establish this avatar&apos;s
+              identity
             </p>
           </div>
         </div>
