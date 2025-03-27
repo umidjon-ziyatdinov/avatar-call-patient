@@ -11,21 +11,21 @@ export function MobileNavigation() {
   const navItems = [
     {
       name: "Home",
-      href: "/",
+      href: "/app",
       icon: Home,
-      active: pathname === "/",
+      active: pathname === "/app",
     },
     {
       name: "Profile",
-      href: "/profile",
+      href: "/app/profile",
       icon: User,
-      active: pathname === "/profile",
+      active: pathname === "/app/profile",
     },
     {
       name: "Admin",
-      href: "/patient-admin",
+      href: "/app/patient-admin",
       icon: ShieldCheck,
-      active: pathname === "/patient-admin",
+      active: pathname === "/app.patient-admin",
     },
   ];
 

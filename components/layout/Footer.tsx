@@ -1,6 +1,7 @@
 // components/Footer.tsx
 import Link from "next/link";
 import Image from "next/image";
+
 import {
   Facebook,
   Twitter,
@@ -179,14 +180,26 @@ export default function Footer() {
 
         <div className="mt-12 md:flex md:items-center md:justify-between">
           <div className="flex flex-col md:flex-row gap-4 text-center md:text-left">
-            <Button asChild variant="secondary" className="rounded-4" size="lg">
+            <Button
+              asChild
+              variant="default"
+              className="rounded-4 text-white font-bold text-md"
+              size="lg"
+            >
               <Link
                 href={navigation.contact.discord}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2"
               >
-                <MessageCircle className="h-5 w-5" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-8 mt-[1px]"
+                >
+                  <path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515c-.21.37-.404.75-.576 1.134a18.382 18.382 0 0 0-5.713 0 12.646 12.646 0 0 0-.578-1.134A19.842 19.842 0 0 0 3.683 4.37C1.793 7.594.902 10.74.25 13.823a19.867 19.867 0 0 0 6.065 4.562c.49-.663.927-1.368 1.3-2.107a12.865 12.865 0 0 1-2.06-1.003c.173-.125.342-.254.507-.388a14.903 14.903 0 0 0 12.886 0c.165.134.334.263.507.388a12.84 12.84 0 0 1-2.062 1.003c.374.739.81 1.444 1.3 2.107a19.846 19.846 0 0 0 6.067-4.562c-.655-3.083-1.546-6.23-3.437-9.454ZM8.478 14.597c-1.257 0-2.285-1.154-2.285-2.572 0-1.42 1.007-2.573 2.285-2.573 1.282 0 2.31 1.155 2.285 2.573 0 1.418-1.007 2.572-2.285 2.572Zm7.044 0c-1.257 0-2.285-1.154-2.285-2.572 0-1.42 1.007-2.573 2.285-2.573 1.282 0 2.31 1.155 2.285 2.573 0 1.418-1.007 2.572-2.285 2.572Z" />
+                </svg>
                 <span>Get Support on Discord</span>
               </Link>
             </Button>

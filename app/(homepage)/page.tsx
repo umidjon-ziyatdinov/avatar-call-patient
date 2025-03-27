@@ -11,7 +11,7 @@ import FinalCTASection from "./Components/CTA";
 
 const Home = () => {
   return (
-    <div>
+    <div className="max-w-full">
       <ReminisceHero />
       <ProblemSolutionSection />
       <FeatureShowcase />

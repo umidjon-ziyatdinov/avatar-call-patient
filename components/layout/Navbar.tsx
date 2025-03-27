@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, LogIn, Calendar } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ const navigation = [
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,7 +45,7 @@ export default function Navbar() {
               height={40}
               className="transition-transform group-hover:scale-110"
             /> */}
-            <span className="hidden font-heading text-[1.5rem] font-bold sm:inline-block group-hover:text-primary transition-colors">
+            <span className=" font-heading text-[1.5rem] font-bold sm:inline-block group-hover:text-primary transition-colors">
               Reminisce AI
             </span>
           </Link>
@@ -90,7 +91,8 @@ export default function Navbar() {
           <Button
             variant="ghost"
             size="lg"
-            className="hidden md:inline-flex items-center gap-2 hover:bg-secondary/30 transition-colors"
+            className="hidden md:inline-flex border items-center gap-2 hover:bg-primary transition-colors"
+            onClick={() => router.push("/login")}
           >
             <LogIn className="h-4 w-4" />
             <span>Login</span>
@@ -148,12 +150,6 @@ export default function Navbar() {
                   className="flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  <Image
-                    src="/logo.svg"
-                    alt="Reminisce AI Logo"
-                    width={32}
-                    height={32}
-                  />
                   <span className="font-heading text-lg font-bold">
                     Reminisce AI
                   </span>
@@ -182,8 +178,9 @@ export default function Navbar() {
                   {/* Mobile Login */}
                   <SheetClose asChild>
                     <Button
-                      variant="ghost"
-                      className="w-full justify-start gap-2 hover:bg-secondary/30"
+                      variant="outline"
+                      className="w-full borde r justify-start gap-2 hover:bg-secondary/30"
+                      onClick={() => router.push("/login")}
                     >
                       <LogIn className="h-4 w-4" />
                       <span>Login</span>

@@ -7,6 +7,8 @@ import {
   ActivityIcon,
   ShieldIcon,
 } from "lucide-react";
+import patient from "@/assets/images/benefit.png";
+import Image from "next/image";
 
 const FeatureShowcase = () => {
   const ref = useRef(null);
@@ -61,7 +63,7 @@ const FeatureShowcase = () => {
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section ref={ref} className="relative py-16 bg-white overflow-hidden">
+    <section ref={ref} className="relative py-16 bg-white overflow-clip">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -87,15 +89,16 @@ const FeatureShowcase = () => {
               style={{ y }}
               className="bg-blue-50/50 rounded-xl aspect-square flex items-center justify-center"
             >
-              <img
-                src="/api/placeholder/600/600"
+              <Image
+                src={patient}
                 alt="Reminisce AI Features"
-                className="max-w-full rounded-xl shadow-lg"
+                className="max-w-full rounded-xl object-cover shadow-lg"
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
             </motion.div>
 
             {/* Right Side: Features Carousel */}
-            <div className="space-y-6">
+            <div className="space-y-6 overflow-hidden">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}

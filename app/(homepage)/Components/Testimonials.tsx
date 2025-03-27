@@ -189,9 +189,11 @@ const InteractiveTimeline: React.FC = () => {
                   </h3>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 mb-4">
-                    &quot;{item.description}&quot;
-                  </p>
+                  <p
+                    className="text-gray-700 mb-4"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+
                   <div className="text-sm">
                     <p className="font-semibold text-gray-900">
                       {item.personName}

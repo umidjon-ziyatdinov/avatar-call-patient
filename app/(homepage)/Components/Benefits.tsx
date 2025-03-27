@@ -94,7 +94,7 @@ const Benefits: React.FC = () => {
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="py-16 md:py-[150px] "
+      className="py-16 md:py-[150px] overflow-x-hidden "
     >
       <div className="container mx-auto px-4">
         <motion.h2

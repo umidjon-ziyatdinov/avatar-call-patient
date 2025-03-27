@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Autoplay } from "swiper/modules";
 import happy from "@/assets/images/happy.png";
-import drug from "@/assets/images/drug.png";
+import drug from "@/assets/images/together.png";
 import patient from "@/assets/images/patient.png";
 import phone from "@/assets/images/phone.png";
 import "swiper/css";
