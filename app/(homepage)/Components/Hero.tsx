@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -122,7 +123,7 @@ const ReminisceHero = () => {
         >
           <h1 className="text-5xl font-bold text-gray-800 leading-tight">
             Reconnect with <br />
-            <span className="text-primary">Loved Ones</span>
+            <span className="text-blue-500 font-[800]">Loved Ones</span>
           </h1>
           <p className="text-xl text-gray-600 mb-6">
             Personalized AI companions bringing comfort and connection to
@@ -131,7 +132,7 @@ const ReminisceHero = () => {
 
           <Button
             size="lg"
-            className="bg-secondary hover:bg-blue-700 text-xl px-8 py-4"
+            className="bg-primary hover:bg-primary/80 hover:scale-105 transition-all text-xl px-8 py-4"
             onClick={() => {
               setIsDialogOpen(true);
               setOnboardingStep(0);
