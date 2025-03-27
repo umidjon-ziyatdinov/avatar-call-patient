@@ -1,8 +1,8 @@
 import { MobileNavigation } from "@/components/layout/BottomNavigation";
-import { handleSignOut } from "../(auth)/actions";
-import { auth } from "../(auth)/auth";
 
 import ProtectedAdmin from "./components/ProtectedAdmin";
+import { auth } from "@/app/(auth)/auth";
+import { handleSignOut } from "@/app/(auth)/actions";
 
 export default async function Home() {
   const session = await auth();
