@@ -1,8 +1,8 @@
+import { handleSignOut } from "@/app/(auth)/actions";
+import { auth } from "@/app/(auth)/auth";
 import { MobileNavigation } from "@/components/layout/BottomNavigation";
 import MobileHeader from "@/components/layout/MobileHeader";
 import PatientProfile from "@/components/profile/MainContent";
-import { auth } from "../(auth)/auth";
-import { handleSignOut } from "../(auth)/actions";
 
 export default async function Home() {
   const session = await auth();
