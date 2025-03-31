@@ -94,7 +94,7 @@ export default function HomePage() {
   const { data: avatars, isLoading } = useSWR<Avatar[]>("/api/avatar", fetcher);
 
   const handleSelectAvatar = (avatarId: string) => {
-    router.push(`/chat/${avatarId}`);
+    router.push(`/app/chat/${avatarId}`);
   };
 
   return (
